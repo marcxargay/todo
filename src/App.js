@@ -6,62 +6,80 @@ class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      openItems: [
-        {
-          text: 'task 1',
-          status: 'open'
-        },
-        {
-          text: 'task 2',
-          status: 'open'
-        },
-        {
-          text: 'task 3',
-          status: 'open'
-        },
-        {
-          text: 'task 4',
-          status: 'open'
-        },
-        {
-          text: 'task 5',
-          status: 'open'
-        },
-        {
-          text: 'task 6',
-          status: 'open'
-        },
-        {
-          text: 'task 7',
-          status: 'open'
-        }
+      listMatrix: [
+        [
+          {
+            text: 'task 1',
+            status: 'open'
+          },
+          {
+            text: 'task 2',
+            status: 'open'
+          },
+          {
+            text: 'task 3',
+            status: 'open'
+          },
+          {
+            text: 'task 4',
+            status: 'open'
+          },
+          {
+            text: 'task 5',
+            status: 'open'
+          },
+          {
+            text: 'task 6',
+            status: 'open'
+          },
+          {
+            text: 'task 7',
+            status: 'open'
+          }
+        ], [], []
       ],
-      completedItems: []
     }
   }
 
-  handleTaskOnClick(i) {
-    const openItems = this.state.openItems.slice()
-    openItems[i].status = 'completed'
-    const completedItem = openItems.splice(i, 1)
-    const completedItems = this.state.completedItems.slice()
-    completedItems.push(...completedItem)
+  moveItemFromListToListAndUpdteStatus(originalList, targetList, i) {
+    const removedItem = originalList.splice(i, 1)
+    targetList.push(...removedItem)
+    return [originalList, targetList]
+  }
+
+  handleOnClick(i, listIndex, next) {
+    const targetIndex = next ? listIndex + 1 : listIndex -1
+    const [originList, targetList] = this.moveItemFromListToListAndUpdteStatus(
+      this.state.listMatrix[listIndex].slice(),
+      this.state.listMatrix[targetIndex].slice(),
+      i
+    )
+    const listMatrix = this.state.listMatrix.slice()
+    listMatrix[listIndex] = originList
+    listMatrix[targetIndex] = targetList
+
     this.setState({
-      openItems: openItems,
-      completedItems: completedItems
+      listMatrix: listMatrix
     })
   }
+
 
   render() {
     return (
       <div className='app'>
         <List
-          items={this.state.openItems}
-          title={'Open'}
-          handleTaskOnClick={(i) => this.handleTaskOnClick(i)} />
+          items={this.state.listMatrix[0]}
+          title={'TODO'}
+          handleOnClickNext={(i) => this.handleOnClick(i, 0, true)} />
         <List
-          items={this.state.completedItems}
-          title={'Completed'} />
+          items={this.state.listMatrix[1]}
+          title={'On progress'}
+          handleOnClickPrevious={(i) => this.handleOnClick(i, 1, false)}
+          handleOnClickNext={(i) => this.handleOnClick(i, 1, true)} />
+        <List
+          items={this.state.listMatrix[2]}
+          handleOnClickPrevious={(i) => this.handleOnClick(i, 2, false)}
+          title={'Completed!'} />
       </div>
     )
   }

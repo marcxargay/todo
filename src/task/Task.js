@@ -1,12 +1,11 @@
 import './Task.scss';
 
-const Task = ({text, status, handleOnClick}) => {
-
+const Task = ({text, handleOnClickPrevious, handleOnClickNext}) => {
   return (
     <div className='task'>
       <p className='task-text'>{text}</p>
-      {handleOnClick && <button className='task-btn' onClick={handleOnClick}>Complete</button>}
-      <p>Satus: {status}</p>
+      {handleOnClickPrevious && <button className='btn previous' onClick={handleOnClickPrevious}>Back</button>}
+      {handleOnClickNext && <button className='btn next' onClick={handleOnClickNext}>Next</button>}
     </div>
   )
 }
