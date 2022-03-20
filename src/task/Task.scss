@@ -1,12 +1,17 @@
 .task {
-  background-color: rgb(238, 230, 184);
-  border: 1px solid rgb(247, 202, 145);
-  border-radius: 0.5em;
+  background-color: #fff;
+  // border: 1px solid rgb(247, 202, 145);
+  border-radius: 0.3rem;
+  margin: 0.1rem;
   position: relative;
+  box-shadow: 0px 10px 15px -3px rgba(0,0,0,0.1);
 }
 
 .btn {
   position: absolute;
+  background: none;
+  border: none;
+  cursor: pointer;
   &.next {
     right: 10px;
     bottom: 5px;
@@ -15,5 +20,9 @@
   &.previous {
     left: 10px;
     bottom: 5px;
+  }
+  &.remove {
+    right:10px;
+    top:5px;
   }
 }

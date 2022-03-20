@@ -1,26 +1,26 @@
-import React, { useState } from 'react'
 
-class Form extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      value: ''
-    }
-  }
-
-
-
-  render() {
-    return (
-      <form onSubmit={this.props.handleSubmit}>
-        <label>
-          Task title:
-          <input type="text" value={this.props.value} onChange={this.props.handleChange} />
-        </label>
-        <input type="submit" value="Submit" onSubmit={this.props.handleSubmit} />
-      </form>
-    )
-  }
+const Form = ({
+  label,
+  inputValue,
+  textareaValue,
+  handleInputChange,
+  handleTextAreaChange,
+  handleSubmit
+}) => {
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        {label}
+        <input type="text" value={inputValue} onChange={handleInputChange} />
+      </label>
+      <textarea
+        value={textareaValue}
+        onChange={handleTextAreaChange}
+        cols="30" rows="10">
+      </textarea>
+      <input type="submit" value={'Create'} onSubmit={handleSubmit} />
+    </form>
+  )
 }
 
 export default Form

@@ -1,18 +1,23 @@
 
 import List from './list/List.jsx';
 import Form from './form/Form.jsx';
+import Modal from './modal/Modal.jsx';
 import React from 'react'
 import './App.scss'
+
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      formValue: '',
+      formInputValue: '',
+      formTextareaValue: '',
       formSubmited: true,
+      modalOpen: false,
       listMatrix: [[], [], []],
     }
 
-    this.handleFormChange = this.handleFormChange.bind(this)
+    this.handleFormInputChange = this.handleFormInputChange.bind(this)
+    this.handleFormTextareaChange = this.handleFormTextareaChange.bind(this)
     this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
@@ -40,16 +45,27 @@ class App extends React.Component {
 
   handleFormSubmit(ev) {
     const listsMatrix = this.state.listMatrix.slice()
-    listsMatrix[0].push({ text: this.state.formValue })
+    listsMatrix[0].push({
+      text: this.state.formInputValue,
+      description: this.state.formTextareaValue
+    })
     this.setState({
-      listsMatrix: listsMatrix
+      listsMatrix: listsMatrix,
+      formInputValue: '',
+      formTextareaValue: ''
     })
     ev.preventDefault()
   }
 
-  handleFormChange(ev) {
+  handleFormInputChange(ev) {
     this.setState({
-      formValue: ev.target.value
+      formInputValue: ev.target.value
+    })
+  }
+
+  handleFormTextareaChange(ev) {
+    this.setState({
+      formTextareaValue: ev.target.value
     })
   }
 
@@ -61,13 +77,23 @@ class App extends React.Component {
     })
   }
 
+  handleOnNewTask() {
+    this.setState({
+      modalOpen: true
+    })
+  }
+
+  handleModalClose() {
+    this.setState({
+      modalOpen: false
+    })
+  }
+
   render() {
     return (
       <div className='app'>
-        <Form
-          handleSubmit={this.handleFormSubmit}
-          handleChange={this.handleFormChange}
-          value={this.state.formValue} />
+        <button onClick={() => this.handleOnNewTask()}>New task</button>
+
         <div className='lists-container'>
           <List
             handleOnRemove={(i) => this.handleOnTaskRemove(i, 0)}
@@ -86,6 +112,17 @@ class App extends React.Component {
             handleOnClickPrevious={(i) => this.handleOnClick(i, 2, false)}
             title={'Completed!'} />
         </div>
+        <Modal
+          open={this.state.modalOpen}
+          backdrop={true}
+          handleOnClose={() => this.handleModalClose()}>
+          <Form
+            handleSubmit={this.handleFormSubmit}
+            handleInputChange={this.handleFormInputChange}
+            handleTextAreaChange={this.handleFormTextareaChange}
+            inputValue={this.state.formInputValue}
+            textareaValue={this.state.formTextareaValue} />
+        </Modal>
       </div>
     )
   }

@@ -4,10 +4,11 @@ import './List.scss'
 const List = ({ items, title, handleOnClickPrevious, handleOnClickNext, handleOnRemove }) => {
   return (
     <div className='list'>
-      <h3>{title}</h3>
+      <h3 className='title'>{title}</h3>
       {items.map((item, i) =>
         <Task 
         text={item.text} 
+        description={item.description} 
         status={item.status} 
         key={i} 
         handleOnRemove={() => handleOnRemove(i)}
