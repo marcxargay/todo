@@ -1,44 +1,19 @@
 
-import List from './list/List.js';
+import List from './list/List.jsx';
+import Form from './form/Form.jsx';
 import React from 'react'
 import './App.scss'
 class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      listMatrix: [
-        [
-          {
-            text: 'task 1',
-            status: 'open'
-          },
-          {
-            text: 'task 2',
-            status: 'open'
-          },
-          {
-            text: 'task 3',
-            status: 'open'
-          },
-          {
-            text: 'task 4',
-            status: 'open'
-          },
-          {
-            text: 'task 5',
-            status: 'open'
-          },
-          {
-            text: 'task 6',
-            status: 'open'
-          },
-          {
-            text: 'task 7',
-            status: 'open'
-          }
-        ], [], []
-      ],
+      formValue: '',
+      formSubmited: true,
+      listMatrix: [[], [], []],
     }
+
+    this.handleFormChange = this.handleFormChange.bind(this)
+    this.handleFormSubmit = this.handleFormSubmit.bind(this)
   }
 
   moveItemFromListToListAndUpdteStatus(originalList, targetList, i) {
@@ -48,7 +23,7 @@ class App extends React.Component {
   }
 
   handleOnClick(i, listIndex, next) {
-    const targetIndex = next ? listIndex + 1 : listIndex -1
+    const targetIndex = next ? listIndex + 1 : listIndex - 1
     const [originList, targetList] = this.moveItemFromListToListAndUpdteStatus(
       this.state.listMatrix[listIndex].slice(),
       this.state.listMatrix[targetIndex].slice(),
@@ -63,23 +38,54 @@ class App extends React.Component {
     })
   }
 
+  handleFormSubmit(ev) {
+    const listsMatrix = this.state.listMatrix.slice()
+    listsMatrix[0].push({ text: this.state.formValue })
+    this.setState({
+      listsMatrix: listsMatrix
+    })
+    ev.preventDefault()
+  }
+
+  handleFormChange(ev) {
+    this.setState({
+      formValue: ev.target.value
+    })
+  }
+
+  handleOnTaskRemove(i, matrixIndex) {
+    const listsMatrix = this.state.listMatrix.slice()
+    listsMatrix[matrixIndex].splice(i, 1)
+    this.setState({
+      listMatrix: listsMatrix
+    })
+  }
 
   render() {
     return (
       <div className='app'>
-        <List
-          items={this.state.listMatrix[0]}
-          title={'TODO'}
-          handleOnClickNext={(i) => this.handleOnClick(i, 0, true)} />
-        <List
-          items={this.state.listMatrix[1]}
-          title={'On progress'}
-          handleOnClickPrevious={(i) => this.handleOnClick(i, 1, false)}
-          handleOnClickNext={(i) => this.handleOnClick(i, 1, true)} />
-        <List
-          items={this.state.listMatrix[2]}
-          handleOnClickPrevious={(i) => this.handleOnClick(i, 2, false)}
-          title={'Completed!'} />
+        <Form
+          handleSubmit={this.handleFormSubmit}
+          handleChange={this.handleFormChange}
+          value={this.state.formValue} />
+        <div className='lists-container'>
+          <List
+            handleOnRemove={(i) => this.handleOnTaskRemove(i, 0)}
+            items={this.state.listMatrix[0]}
+            title={'TODO'}
+            handleOnClickNext={(i) => this.handleOnClick(i, 0, true)} />
+          <List
+            handleOnRemove={(i) => this.handleOnTaskRemove(i, 1)}
+            items={this.state.listMatrix[1]}
+            title={'On progress'}
+            handleOnClickPrevious={(i) => this.handleOnClick(i, 1, false)}
+            handleOnClickNext={(i) => this.handleOnClick(i, 1, true)} />
+          <List
+            handleOnRemove={(i) => this.handleOnTaskRemove(i, 2)}
+            items={this.state.listMatrix[2]}
+            handleOnClickPrevious={(i) => this.handleOnClick(i, 2, false)}
+            title={'Completed!'} />
+        </div>
       </div>
     )
   }

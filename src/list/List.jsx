@@ -1,7 +1,7 @@
-import Task from '../task/Task.js';
+import Task from '../task/Task.jsx';
 import './List.scss'
 
-const List = ({ items, title, handleOnClickPrevious, handleOnClickNext }) => {
+const List = ({ items, title, handleOnClickPrevious, handleOnClickNext, handleOnRemove }) => {
   return (
     <div className='list'>
       <h3>{title}</h3>
@@ -10,6 +10,7 @@ const List = ({ items, title, handleOnClickPrevious, handleOnClickNext }) => {
         text={item.text} 
         status={item.status} 
         key={i} 
+        handleOnRemove={() => handleOnRemove(i)}
         handleOnClickPrevious={handleOnClickPrevious ? () => handleOnClickPrevious(i) : null} 
         handleOnClickNext={handleOnClickNext ? () => handleOnClickNext(i) : null} />
       )}
